@@ -2,9 +2,9 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   before_action :require_user_logged_in
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
+  before_action :current_user_tasks, only: [:index, :create]
   
   def index
-    @tasks = Task.all
   end
 
   def show
@@ -16,12 +16,10 @@ class TasksController < ApplicationController
   
   def create
     @task = current_user.tasks.build(task_params)
-    
     if @task.save
       flash[:success] = 'Task を登録しました'
       redirect_to root_url
     else
-      @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
       flash.now[:danger] = 'Task を登録できませんでした'
       render 'toppages/index'
     end
@@ -61,6 +59,10 @@ class TasksController < ApplicationController
     unless @task
       redirect_to root_url
     end
+  end
+  
+  def current_user_tasks
+    @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
   end
   
 end

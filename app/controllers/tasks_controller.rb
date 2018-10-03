@@ -21,7 +21,7 @@ class TasksController < ApplicationController
       redirect_to root_url
     else
       flash.now[:danger] = 'Task を登録できませんでした'
-      render 'toppage/index'
+      render 'toppages/index'
     end
   end
   
